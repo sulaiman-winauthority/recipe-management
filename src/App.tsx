@@ -2,6 +2,7 @@ import React from 'react'
 import NavBar from 'common/components/NavBar'
 import HomePage from 'pages/Dashboard/HomePage'
 import { CssBaseline } from '@mui/material'
+import Footer from 'common/components/Footer';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
     <CssBaseline />
       <NavBar />
       <HomePage />
-      <h1>Hello World</h1>
+      <Footer/>
     </>
   )
 }

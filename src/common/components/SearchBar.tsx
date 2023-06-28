@@ -1,30 +1,28 @@
-import { TextField, IconButton, InputAdornment, Container } from '@mui/material'
+import { TextField, IconButton, InputAdornment, Container, Grid } from '@mui/material'
 import React from 'react'
 import SearchIcon from '@mui/icons-material/Search'
 
-const SearchBar = () => (
-  <TextField
-    variant='filled'
-    id='search'
-    type='search'
-    label='Search'
-    sx={{
-      mt: 0,
-      width: '50vw',
-      zIndex: 1,
-      backgroundColor: '#dedcdc',
-      padding: '10px',
-      borderRadius: '10px',
-      
-    }}
-    InputProps={{
-      endAdornment: (
-        <InputAdornment position='end'>
-          <SearchIcon />
-        </InputAdornment>
-      ),
-    }}
-  />
-)
+const SearchBar = () => {
+  return (
+    <>
+      <Grid >
+        <input
+          name='searchRecipes'
+          placeholder='Search Recipes'
+          style={{
+            backgroundColor: '#f2f2f2',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            padding: '8px 12px',
+            fontSize: '16px',
+            width: '300px',
+          }}
+        />
+      </Grid>
+    </>
+  )
+}
 
 export default SearchBar
+
+
