@@ -35,12 +35,12 @@ const validationSchema = Yup.object().shape({
 })
 
 interface ICategory {
-  categoryId: number
+  categoryId: string 
   category: string
 }
 
 export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRecipe: RecipeFormValues | null }) => {
-  const [categories, setCategories] = useState<ICategory[]>([])
+  const [categories, setCategories] = useState<ICategory[]>([] as ICategory[])
 
   const initialValues: RecipeFormValues = {
     recipeName: '',
@@ -54,13 +54,14 @@ export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRec
     nutritionalInformation: '',
     recipeImage: '',
     additionalNotes: '',
-    categoryId: 0,
+    categoryId: 1,
   }
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const handleSubmit = async (values: RecipeFormValues, { resetForm }: { resetForm: () => void }) => {
     alert(JSON.stringify(values))
     console.log('Selected Category', selectedCategory)
     try {
+      values.categoryId= Number(values.categoryId)
       axios.post('http://127.0.0.1:3001/recipes', values).then(() => {
         alert('Submitted Succesfully')
       })
@@ -75,7 +76,7 @@ export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRec
     axios
       .get('http://127.0.0.1:3001/categories')
       .then((response) => {
-        setCategories(response.data), console.log(response)
+        setCategories(response.data), console.log(response, 'categories')
       })
       .catch((error) => console.log(error))
   }, [])
@@ -124,16 +125,13 @@ export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRec
                         error={touched.categoryId && Boolean(errors.categoryId)}
                         disabled={mode === 'view'}
                       >
-                        <MenuItem>----Select----</MenuItem>
+                        <MenuItem value={0}>----Select----</MenuItem>
+                        {console.log('categories', categories)}
                         {categories.map((category, index) => (
-                          <MenuItem key={index} value={category.categoryId}>{category.category}</MenuItem>
+                          <MenuItem key={index} value={category.categoryId}>
+                            {category.category}
+                          </MenuItem>
                         ))}
-                        {/* <MenuItem value='1'>Appetizer</MenuItem>
-                        <MenuItem value='2'>Soup</MenuItem>
-                        <MenuItem value='3'>Salad</MenuItem>
-                        <MenuItem value='4'>Main Course</MenuItem>
-                        <MenuItem value='5'>Pasta</MenuItem>
-                        <MenuItem value='6'>Vegetarian</MenuItem> */}
                         disabled={mode === 'view'}
                       </Field>
                     </FormControl>

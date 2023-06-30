@@ -7,14 +7,12 @@ import { RecipeFormValues } from 'common/components/RecipeForm'
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState('')
-
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filteredRecipes, setFilteredRecipes] = useState<RecipeFormValues[]>([]);
   const [recipes, setRecipes] = useState<RecipeFormValues[]>([])
   useEffect(() => {
     const fetchRecipeData = async () => {
       const response = await axios.get('http://127.0.0.1:3001/recipes')
-      params: {
-        category: selectedCategory
-      }
       console.log(response)
       setRecipes(response.data)
     }
@@ -22,7 +20,7 @@ export default function HomePage() {
     fetchRecipeData()
   }, [selectedCategory])
 
-  const filteredRecipes = recipes.filter((recipe) => (selectedCategory ? recipe.category === selectedCategory : true))
+  
 
   const handleDeleteRecipe = async (recipeId: number | undefined) => {
     try {
