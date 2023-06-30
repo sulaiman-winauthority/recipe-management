@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Formik, Field, ErrorMessage, FormikHelpers, Form } from 'formik'
 import { Grid, Paper, Button, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import * as Yup from 'yup'
 import axios from 'axios'
 
 export interface RecipeFormValues {
-  id?:number
+  id?: number
   recipeName: string
   category?: string
   ingredients: string
@@ -15,14 +15,14 @@ export interface RecipeFormValues {
   instruction: string
   servingSize: string
   nutritionalInformation: string
-  recipeImage?: string 
+  recipeImage?: string
   additionalNotes: string
   categoryId: number
 }
 
 const validationSchema = Yup.object().shape({
   recipeName: Yup.string().required('Recipe Name is required'),
-  category: Yup.string().required('Category is required'),
+  // category: Yup.string().required('Category is required'),
   ingredients: Yup.string().required('Ingredients are required'),
   measurement: Yup.string().required('Measurement is required'),
   timeTaken: Yup.number().required('Time Taken is required'),
@@ -34,7 +34,14 @@ const validationSchema = Yup.object().shape({
   additionalNotes: Yup.string(),
 })
 
+interface ICategory {
+  categoryId: number
+  category: string
+}
+
 export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRecipe: RecipeFormValues | null }) => {
+  const [categories, setCategories] = useState<ICategory[]>([])
+
   const initialValues: RecipeFormValues = {
     recipeName: '',
     category: '',
@@ -51,9 +58,9 @@ export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRec
   }
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const handleSubmit = async (values: RecipeFormValues, { resetForm }: { resetForm: () => void }) => {
+    alert(JSON.stringify(values))
+    console.log('Selected Category', selectedCategory)
     try {
-      delete values.category
-      values.category = selectedCategory
       axios.post('http://127.0.0.1:3001/recipes', values).then(() => {
         alert('Submitted Succesfully')
       })
@@ -64,8 +71,16 @@ export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRec
     }
   }
 
+  useEffect(() => {
+    axios
+      .get('http://127.0.0.1:3001/categories')
+      .then((response) => {
+        setCategories(response.data), console.log(response)
+      })
+      .catch((error) => console.log(error))
+  }, [])
   return (
-    <Grid container justifyContent='center' alignItems='center' mt={10}>
+    <Grid container justifyContent='center' alignItems='center' mt={10} mb={10}>
       <Grid item xs={12} sm={8} md={6}>
         <Paper elevation={4} sx={{ padding: 3 }}>
           <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
@@ -96,25 +111,29 @@ export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRec
 
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel id='category'>Category Name</InputLabel>
+                      <InputLabel id='categoryId'>Category Name</InputLabel>
                       <Field
                         as={Select}
-                        labelId='category'
+                        labelId='categoryId'
+                        label='Category Name'
                         id='categoryId'
-                        name='category'
-                        value={values.category}
+                        name='categoryId'
+                        value={values.categoryId}
                         onChange={handleChange}
-                        helperText={touched.category && errors.category}
-                        error={touched.category && Boolean(errors.category)}
+                        helperText={touched.categoryId && errors.categoryId}
+                        error={touched.categoryId && Boolean(errors.categoryId)}
                         disabled={mode === 'view'}
                       >
                         <MenuItem>----Select----</MenuItem>
-                        <MenuItem value='Appetizer'>Appetizer</MenuItem>
-                        <MenuItem value='Soup'>Soup</MenuItem>
-                        <MenuItem value='Salad'>Salad</MenuItem>
-                        <MenuItem value='Main Course'>Main Course</MenuItem>
-                        <MenuItem value='Pasta'>Pasta</MenuItem>
-                        <MenuItem value='Vegetarian'>Vegetarian</MenuItem>
+                        {categories.map((category, index) => (
+                          <MenuItem key={index} value={category.categoryId}>{category.category}</MenuItem>
+                        ))}
+                        {/* <MenuItem value='1'>Appetizer</MenuItem>
+                        <MenuItem value='2'>Soup</MenuItem>
+                        <MenuItem value='3'>Salad</MenuItem>
+                        <MenuItem value='4'>Main Course</MenuItem>
+                        <MenuItem value='5'>Pasta</MenuItem>
+                        <MenuItem value='6'>Vegetarian</MenuItem> */}
                         disabled={mode === 'view'}
                       </Field>
                     </FormControl>

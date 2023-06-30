@@ -8,14 +8,15 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import RecipeForm, { RecipeFormValues } from './RecipeForm'
 
 const style = {
-  display: 'flex',
+  position: 'relative' as const,
   justifyContent: 'center',
   alignItems: 'center',
   outline: 'none',
+  height: '100%',
   backgroundColor: 'transparent',
   boxShadow: 'none',
-  height: '100%',
   overflow: 'auto',
+  
 }
 
 interface IProps {
@@ -27,16 +28,15 @@ interface IProps {
 
 export default function FormModal({ open, mode, setOpen, setMode }: IProps) {
   console.log('Check Modal', mode)
-  //const [open, setOpen] = React.useState(false);
-  //const [mode, setMode] = React.useState('');
+
   const [selectedRecipe, setSelectedRecipe] = React.useState<RecipeFormValues | null>(null)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
   return (
-    <Grid container m={5} xs={12} justifyContent='center'>
-      <Grid item>
+    <Grid container my={5} textAlign='center'>
+      <Grid item xs={12}>
         <Button
           variant='contained'
           onClick={() => {
@@ -47,31 +47,10 @@ export default function FormModal({ open, mode, setOpen, setMode }: IProps) {
         >
           Add your Recipe
         </Button>
-        <Button
-          sx={{ m: 5 }}
-          variant='contained'
-          onClick={() => {
-            handleOpen()
-            //setMode('edit')
-            setSelectedRecipe(null)
-          }}
-        >
-          Edit your Recipe
-        </Button>
-        <Button
-          variant='outlined'
-          onClick={() => {
-            handleOpen()
-            //setMode('view')
-            setSelectedRecipe(null)
-          }}
-        >
-          View Recipes
-        </Button>
       </Grid>
       <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
         <Box style={style}>
-          <IconButton sx={{ position: 'absolute', top: 0, right: 0 }} size='large' onClick={handleClose}>
+          <IconButton sx={{ position: 'absolute', top: 80, right: 365 }} size='large' onClick={handleClose}>
             <HighlightOffIcon />
           </IconButton>
           <RecipeForm mode={mode} selectedRecipe={selectedRecipe} />
