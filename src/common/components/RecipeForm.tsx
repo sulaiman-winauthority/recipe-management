@@ -40,7 +40,7 @@ interface ICategory {
 }
 
 export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRecipe: RecipeFormValues | null }) => {
-  const [categories, setCategories] = useState<ICategory[]>([])
+  const [categories, setCategories] = useState<ICategory[]>([{ categoryId: 0, category: ''}])
 
   const initialValues: RecipeFormValues = {
     recipeName: '',
@@ -126,14 +126,10 @@ export const RecipeForm = ({ mode, selectedRecipe }: { mode: string; selectedRec
                       >
                         <MenuItem>----Select----</MenuItem>
                         {categories.map((category, index) => (
-                          <MenuItem key={index} value={category.categoryId}>{category.category}</MenuItem>
+                          <MenuItem key={index} value={category.categoryId}>
+                            {category.category}
+                          </MenuItem>
                         ))}
-                        {/* <MenuItem value='1'>Appetizer</MenuItem>
-                        <MenuItem value='2'>Soup</MenuItem>
-                        <MenuItem value='3'>Salad</MenuItem>
-                        <MenuItem value='4'>Main Course</MenuItem>
-                        <MenuItem value='5'>Pasta</MenuItem>
-                        <MenuItem value='6'>Vegetarian</MenuItem> */}
                         disabled={mode === 'view'}
                       </Field>
                     </FormControl>

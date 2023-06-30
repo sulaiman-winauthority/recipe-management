@@ -12,9 +12,6 @@ export default function HomePage() {
   useEffect(() => {
     const fetchRecipeData = async () => {
       const response = await axios.get('http://127.0.0.1:3001/recipes')
-      params: {
-        category: selectedCategory
-      }
       console.log(response)
       setRecipes(response.data)
     }
